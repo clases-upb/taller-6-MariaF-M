@@ -3,13 +3,36 @@
  */
 package org.example;
 
+import org.checkerframework.checker.units.qual.N;
+import org.checkerframework.checker.units.qual.t;
+import com.google.common.util.concurrent.ExecutionError;
+
+import java.util.Arrays;
+import java.io.*;
+import java.util.Scanner;
+import java.util.Collections;
+
 public class App {
+
+    // Punto 4: Atributos estáticos globales públicos
+    public static int[] v_elementos;
+    public static int tam_v;
+
+    // Punto 6: Atributos estáticos globales públicos
+    public static int tam_m;
 
     public static void main(String[] args) {
         try {
 
+            Punto_1();
+            Punto_2();
+            Punto_3();
+            Punto_4();
+            Punto_5();
+            Punto_6();
+
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println("Ocurrió un error: " + e);
         }
     }
 
@@ -45,11 +68,71 @@ public class App {
      * elemento.
      */
 
+    public static void Punto_1() throws Exception {
+        try {
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error en el Punto_1: " + e);
+        }
+    }
+
     /*
      * 2. Escriba un algoritmo que calcule aleatoriamente N temperaturas, las lleve
      * a un vector y luego calcule su media, cuántas temperaturas están por encima
      * de la media y cuántas por debajo.
      */
+
+    public static void Punto_2() throws Exception {
+        try {
+            System.out.println(Calcular_Temperatura(10));
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error en el Punto_2: " + e);
+        }
+    }
+
+    public static String Calcular_Temperatura(int N) throws Exception {
+
+        try {
+
+            // Asegurar que N sea mayor que 0
+
+            if (N <= 0) {
+                return "N tiene que ser mayor que 0";
+            }
+
+            // Definir variables y array
+            int t_alea, max = 100, min = -100, suma = 0, c_superior = 0, c_inferiror = 0;
+            double media;
+            int[] v_temperaturas = new int[N];
+            String texto = "";
+
+            // Ciclo aleatorios de temperaturas entre (-50° y 50°)
+            for (int p_tem = 0; p_tem < N; p_tem++) {
+                t_alea = (int) (Math.random() * (max - min + 1) + min);
+                v_temperaturas[p_tem] = t_alea;
+                suma += v_temperaturas[p_tem];
+            }
+
+            // Calcular la media
+            media = (double) suma / N;
+
+            // Retornar temperaturas que superan la media y las que no
+            for (int p_tem = 0; p_tem < N; p_tem++) {
+
+                if (v_temperaturas[p_tem] < media) {
+                    c_inferiror++;
+                } else if (v_temperaturas[p_tem] > media) {
+                    c_superior++;
+                }
+            }
+            texto = "Temperaturas: " + Arrays.toString(v_temperaturas) + "\n" + "Media: " + media + "\n"
+                    + "Temperaturas que seperan la media: " + c_superior + "\n"
+                    + "Temperaturas que no seperan la media: " + c_inferiror;
+            return texto;
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Calcular_Temperatura " + e);
+        }
+    }
 
     /*
      * 3. Cargue un vector a partir de un archivo de palabras, con mínimo 10
@@ -57,6 +140,75 @@ public class App {
      * 
      * Escriba el vector inicial sin ordenar, los vectores ordenados.
      */
+
+    public static void Punto_3() throws Exception {
+        try {
+            System.out.println(Ordenar_palabras());
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error en el Punto_3: " + e);
+        }
+    }
+
+    public static String Ordenar_palabras() throws Exception {
+        try {
+
+            // Abrir archivo
+            BufferedReader bu_pal = new BufferedReader(new FileReader(
+                    "taller-6-MariaF-M-main\\taller-6-MariaF-M-main\\app\\src\\resources\\Palabras.txt"));
+
+            // Definir variables
+            int contador = 0;
+            String linea = bu_pal.readLine();
+            String resultado = "";
+
+            // Verificar contenido del archivo
+            if (linea == null) {
+                bu_pal.close();
+                return "El archivo está vacío";
+            } else {
+                while (linea != null) {
+                    contador++;
+                    linea = bu_pal.readLine();
+                }
+                bu_pal.close();
+            }
+
+            // Verificar 10 palabras mínimo
+            if (contador < 10) {
+                return "El archivo debe de tener más de 10 palabras";
+            }
+
+            // Reabrir el archivo para leer las palabras en el arreglo
+            String[] v_palabras = new String[contador];
+            BufferedReader bu_pal2 = new BufferedReader(new FileReader(
+                    "taller-6-MariaF-M-main\\taller-6-MariaF-M-main\\app\\src\\resources\\Palabras.txt"));
+            for (int pos = 0; pos < v_palabras.length; pos++) {
+                v_palabras[pos] = bu_pal2.readLine();
+            }
+            bu_pal2.close();
+
+            resultado += "- El vector inicial es: " + Arrays.toString(v_palabras);
+
+            Arrays.sort(v_palabras);
+            String[] v2_palabras = Arrays.copyOf(v_palabras, v_palabras.length);
+
+            // Mostrar el vector de forma ascendente
+            resultado += "\n- Vector de forma ascendente: " + Arrays.toString(v_palabras);
+
+            // Mostrar el vector de forma descendete
+            resultado += " \n- Vector de forma descendete: ";
+            int pos2 = v2_palabras.length - 1;
+            for (int pos = 0; pos <= pos2; pos++) {
+
+                v_palabras[pos] = v2_palabras[pos2 - pos];
+            }
+            resultado += Arrays.toString(v_palabras);
+
+            return resultado;
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Ordenar_palabras " + e);
+        }
+    }
 
     /*
      * 4. Escriba un algoritmo que cree un vector de N elementos (el N es dado por
@@ -69,15 +221,239 @@ public class App {
      * opción para terminar el programa.
      */
 
+    public static void Punto_4() throws Exception {
+        try {
+            String opcion = "";
+
+            System.out.println("Ingrese el número de elementos que quiere en el vector: ");
+            Scanner teclado = new Scanner(System.in);
+            tam_v = teclado.nextInt();
+
+            // Retornar Crear_vector
+            System.out.println(Crear_vector());
+
+            do {
+
+                // Posición a eliminar
+                System.out.println("Digíte la posición que quiere eliminar: ");
+                int pos_eliminar = teclado.nextInt();
+                System.out.println();
+
+                if (pos_eliminar > tam_v || pos_eliminar <= 0) {
+                    System.out.println("La posición a elminar esta fuera del rango del vector");
+                    return;
+                } else {
+
+                    // Menú
+                    System.out.println("Ingrese la opcion del menú, digite S para salir");
+                    System.out.println("1. Dejar la casilla en 0");
+                    System.out.println(
+                            "2. Desplazar los elementos de manera que el cero quede en la última posición del vector");
+                    System.out.println("S. Salir");
+
+                    opcion = teclado.next();
+
+                    // Switch
+                    switch (opcion.charAt(0)) {
+                        case '1':
+                            Eliminar_posicion_0(pos_eliminar);
+                            System.out.println(Arrays.toString(v_elementos));
+                            break;
+
+                        case '2':
+                            Eliminar_posicion_mover(pos_eliminar);
+                            System.out.println(Arrays.toString(v_elementos));
+                            break;
+
+                        case 'S':
+                            System.out.println("Finaliza");
+                    }
+                }
+            } while (opcion.toUpperCase().charAt(0) != 'S');
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error en el Punto_4: " + e);
+        }
+    }
+
+    public static String Crear_vector() throws Exception {
+        try {
+
+            if (tam_v <= 0) {
+                return "El número de elementos dentro del vector tiene que ser un valor entero mayor que 0";
+            }
+
+            // Definir variables y array
+            int max = 100, min = 1;
+            short n_alea;
+            String texto = "";
+            v_elementos = new int[tam_v];
+
+            // Asignarle los números aleatorios
+            for (int pos = 0; pos < tam_v; pos++) {
+                n_alea = (short) (Math.random() * (max - min + 1) + min);
+                v_elementos[pos] = n_alea;
+            }
+
+            // Retorna el vector
+            return Arrays.toString(v_elementos);
+
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Crear_vector " + e);
+        }
+    }
+
+    public static void Eliminar_posicion_0(int pos_eliminar) throws Exception {
+
+        try {
+            v_elementos[pos_eliminar - 1] = 0;
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Eliminar_posicion " + e);
+        }
+    }
+
+    public static void Eliminar_posicion_mover(int pos_eliminar) throws Exception {
+
+        try {
+            int pos;
+
+            for (pos = pos_eliminar; pos < v_elementos.length; pos++) {
+                v_elementos[pos - 1] = v_elementos[pos];
+            }
+            v_elementos[pos - 1] = 0;
+
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Eliminar_posicion " + e);
+        }
+    }
+
     /*
      * 5. Escriba un algoritmo para convertir un número decimal en un número
      * hexadecimal, apoyado en vectores.
      */
 
+    private static void Punto_5() throws Exception {
+        try {
+            System.out.println(Convertir_a_hexadecimal(7945));
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error en el Punto_5: " + e);
+        }
+    }
+
+    public static String Convertir_a_hexadecimal(int nro) throws Exception {
+        try {
+            // Definir variables
+            int division = nro, contador = 0;
+            String texto = "";
+
+            // Obtener tamaño arreglo
+            do {
+                division = division / 16;
+                contador++;
+
+            } while (division > 16);
+
+            // Definir array
+            int[] v_residuos = new int[contador + 1];
+            division = nro;
+
+            for (int pos = 0; pos <= contador; pos++) {
+
+                v_residuos[pos] = division % 16;
+                division = division / 16;
+            }
+
+            // Recorrer el archivo y cambiar a hexadecimal
+            for (int pos = v_residuos.length - 1; pos >= 0; pos--) {
+
+                switch (v_residuos[pos]) {
+                    case 10:
+                        texto += "A";
+                        break;
+                    case 11:
+                        texto += "B";
+                        break;
+                    case 12:
+                        texto += "C";
+                        break;
+                    case 13:
+                        texto += "D";
+                        break;
+                    case 14:
+                        texto += "E";
+                        break;
+                    case 15:
+                        texto += "F";
+                        break;
+
+                    default:
+                        texto += v_residuos[pos] + "";
+                        break;
+                }
+            }
+            return texto;
+
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Convertir_a_hexadecimal " + e);
+        }
+    }
+
     /*
      * 6. Escriba un algoritmo que solicite al usuario el orden de una matriz
      * cuadrática, implemente su matriz transpuesta (investiga qué es) y la imprima.
      */
+
+    private static void Punto_6() {
+
+        try {
+
+            Scanner teclado = new Scanner(System.in);
+            System.out.println("Ingrese un valor para definir el orden de la matriz: ");
+            tam_m = teclado.nextInt();
+
+            System.out.println(Crear_matriz_cudratica());
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error en el Punto_6: " + e);
+        }
+    }
+
+    public static String Crear_matriz_cudratica() throws Exception {
+        try {
+
+            // Definir variables y arrays
+            int nro_alea;
+            String resultado = "";
+            int[][] m_cuadratica = new int[tam_m][tam_m];
+            int[][] m_transpuesta = new int[tam_m][tam_m];
+
+            // Matriz original
+            resultado += "\nMatriz original: \n";
+            for (int fil = 0; fil < tam_m; fil++) {
+                for (int col = 0; col < tam_m; col++) {
+                    nro_alea = (int) (Math.random() * 100);
+                    m_cuadratica[fil][col] = nro_alea;
+                    resultado += m_cuadratica[fil][col] + " ";
+                }
+                resultado += "\n";
+            }
+
+            // Matriz transpuesta
+            resultado += "\nMatriz transpuesta: \n";
+            for (int fil = 0; fil < tam_m; fil++) {
+                for (int col = 0; col < tam_m; col++) {
+                    m_transpuesta[col][fil] = m_cuadratica[col][fil];
+                    resultado += m_transpuesta[col][fil] + " ";
+                }
+                resultado += "\n";
+            }
+
+            return resultado;
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Crear_matriz_cudratica " + e);
+        }
+    }
 
     /*
      * 7. Escriba un algoritmo que calcule el producto y la división. Los operandos
