@@ -5,6 +5,8 @@ package org.example;
 
 import org.checkerframework.checker.units.qual.N;
 import org.checkerframework.checker.units.qual.t;
+
+import com.google.common.base.Strings;
 import com.google.common.util.concurrent.ExecutionError;
 
 import java.util.Arrays;
@@ -14,12 +16,21 @@ import java.util.Collections;
 
 public class App {
 
+    // Punto 1: Atributos estáticos globales públicos
+    public static int[] v_nros;
+    public static String[] v_str;
+    public static boolean hacia_adelante = true, ascendente = true;;
+    public static int alea;
+
     // Punto 4: Atributos estáticos globales públicos
     public static int[] v_elementos;
     public static int tam_v;
 
-    // Punto 6: Atributos estáticos globales públicos
+    // Punto 6 - punto 7 - punto 9: Atributos estáticos globales públicos
     public static int tam_m;
+
+    // Punto 7 - punto 8: Atributos globales públicos
+    public static int[][] matriz;
 
     public static void main(String[] args) {
         try {
@@ -30,6 +41,9 @@ public class App {
             Punto_4();
             Punto_5();
             Punto_6();
+            Punto_7();
+            Punto_8();
+            Punto_9();
 
         } catch (Exception e) {
             System.out.println("Ocurrió un error: " + e);
@@ -71,8 +85,325 @@ public class App {
     public static void Punto_1() throws Exception {
         try {
 
-        } catch (Exception e) {
+            System.out.println("\n\nPunto 1:\n");
+
+            // Crear variables
+            String opcion, opcion_a, opcion_b, opcion_d, opcion_e, opcion_f;
+            Scanner teclado = new Scanner(System.in);
+
+            Crear_vectores();
+            System.out.println(Arrays.toString(v_nros) + "\n");
+            System.out.println(Arrays.toString(v_str));
+
+            // Crear menú
+            do {
+
+                System.out.println("Ingrese la opcion del menú, digite S para salir");
+                System.out.println("a. Recorrer secuencialmente");
+                System.out.println("b. Actualizar");
+                System.out.println("c. Añadir");
+                System.out.println("d. Borrar");
+                System.out.println("e. Ordenar el vector");
+                System.out.println("f. Búsqueda");
+                System.out.println("S. Salir");
+                opcion = teclado.next();
+
+                switch (opcion.charAt(0)) {
+                    case 'a':
+
+                        System.out.println("Lo quiere imprimir hacia adelante o hacia atras");
+                        System.out.println("1. Adelante: ");
+                        System.out.println("2. Atras: ");
+                        opcion_a = teclado.next();
+
+                        switch (opcion_a) {
+                            case "1":
+                                hacia_adelante = true;
+                                break;
+                            default:
+                                hacia_adelante = false;
+                                break;
+                        }
+                        System.out.println(Recorrer_secuencialmente(hacia_adelante));
+                        break;
+
+                    case 'b':
+
+                        System.out.println("Que posición quiere actualizar: ");
+                        opcion_b = teclado.next();
+                        Actualizar(Integer.parseInt(opcion_b));
+                        break;
+
+                    case 'c':
+                        Añadir();
+                        break;
+
+                    case 'd':
+
+                        System.out.println("Que posición quiere borrar: ");
+                        opcion_d = teclado.next();
+                        Borrar(Integer.parseInt(opcion_d));
+                        break;
+
+                    case 'e':
+
+                        System.out.println("Lo quiere ordenar ascendentemente o descendentemente: ");
+                        System.out.println("1. Ascendentemente");
+                        System.out.println("2. Descendentemente:");
+                        opcion_e = teclado.next();
+
+                        switch (opcion_e) {
+                            case "1":
+                                ascendente = true;
+                                break;
+                            default:
+                                ascendente = false;
+                                break;
+                        }
+                        System.out.println(Ordenar(ascendente));
+                        break;
+
+                    case 'f':
+                        System.out.println("Ingrese el elemento a buscar (en vector numérico): ");
+                        opcion_f = teclado.next();
+                        System.out.println(Buscar(Integer.parseInt(opcion_f)));
+                        break;
+
+                    case 'S':
+                        System.out.println("Finaliza");
+                }
+            }
+
+            while (opcion.toUpperCase().charAt(0) != 'S');
+
+        } catch (
+
+        Exception e) {
             System.out.println("Ocurrió un error en el Punto_1: " + e);
+        }
+    }
+
+    public static void Crear_vectores() throws Exception {
+        try {
+
+            alea = (int) (Math.random() * (5 - 1 + 1) + 1);
+
+            v_nros = new int[alea];
+            v_str = new String[alea];
+
+            int alea_nro = 0, alea_str;
+
+            for (int pos = 0; pos < v_nros.length; pos++) {
+                alea_nro = (int) (Math.random() * 10);
+                v_nros[pos] = alea_nro;
+            }
+
+            for (int pos = 0; pos < v_str.length; pos++) {
+                alea_str = (int) (Math.random() * (9 - 0 + 1) + 0);
+
+                if (alea_str == 0) {
+                    v_str[pos] = "";
+                } else {
+                    v_str[pos] = Integer.toString(alea_str);
+                }
+            }
+
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Crear_vectores " + e);
+        }
+    }
+
+    public static String Recorrer_secuencialmente(boolean adelante) throws Exception {
+        try {
+
+            String texto = "";
+
+            // Devolver texto hacia adelante
+            if (adelante == true) {
+
+                texto += "Texto hacia adelante: \n";
+
+                // Vector números
+                texto += "- Vector números: \n ";
+                for (int pos = 0; pos < v_nros.length; pos++) {
+                    texto += v_nros[pos] + " ";
+                }
+
+                // Vector strings
+                texto += "\n- Vector strings: \n ";
+                for (int pos = 0; pos < v_str.length; pos++) {
+                    texto += v_str[pos] + " ";
+                }
+
+                // Devolver texto hacia atras
+            } else {
+                texto += "Texto hacia atras: \n";
+
+                // Vector números
+                texto += "- Vector números: \n ";
+                for (int pos = v_nros.length - 1; pos >= 0; pos--) {
+                    texto += v_nros[pos] + " ";
+                }
+
+                // Vector strings
+                texto += "\n- Vector strings: \n ";
+                for (int pos = v_str.length - 1; pos >= 0; pos--) {
+                    texto += v_str[pos] + " ";
+                }
+            }
+            return texto;
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Recorrer_secuencialmente " + e);
+        }
+    }
+
+    public static void Actualizar(int posicion) throws Exception {
+        try {
+
+            int alea_nro = (int) (Math.random() * 10);
+            int alea_str = (int) (Math.random() * (9 - 0 + 1) + 0);
+
+            v_nros[posicion - 1] = alea_nro;
+
+            if (alea_str == 0) {
+                v_str[posicion - 1] = "";
+            } else {
+                v_str[posicion - 1] = Integer.toString(alea_str);
+            }
+
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Actualizar " + e);
+        }
+    }
+
+    public static void Añadir() throws Exception {
+        try {
+
+            alea += 1;
+            int[] l_nros = new int[alea];
+            String[] l_str = new String[alea];
+
+            for (int pos = 0; pos < v_nros.length; pos++) {
+                l_nros[pos] = v_nros[pos];
+            }
+
+            for (int pos = 0; pos < v_str.length; pos++) {
+                l_str[pos] = v_str[pos];
+            }
+
+            int alea_nro = (int) (Math.random() * 10);
+            int alea_str = (int) (Math.random() * (9 - 0 + 1) + 0);
+
+            l_nros[alea - 1] = alea_nro;
+
+            if (alea_str == 0) {
+                l_str[alea - 1] = "";
+            } else {
+                l_str[alea - 1] = Integer.toString(alea_str);
+            }
+
+            v_nros = l_nros;
+            v_str = l_str;
+
+            System.out.println("\nVector números: " + Arrays.toString(v_nros));
+            System.out.println("\nVector string: " + Arrays.toString(v_str));
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Añadir " + e);
+        }
+    }
+
+    public static void Borrar(int posicion) throws Exception {
+        try {
+
+            v_nros[posicion - 1] = 0;
+            v_str[posicion - 1] = "";
+
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Borrar " + e);
+        }
+    }
+
+    public static String Ordenar(boolean asc) throws Exception {
+        try {
+
+            String texto = "";
+
+            // Devolver texto ascendente
+            if (asc) {
+
+                texto += "Texto ascendente: \n";
+
+                Arrays.sort(v_nros);
+                Arrays.sort(v_str);
+
+                // Vector números
+                texto += "- Vector números: \n ";
+                for (int pos = 0; pos < v_nros.length; pos++) {
+                    texto += v_nros[pos] + " ";
+                }
+
+                // Vector strings
+                texto += "\n- Vector strings: \n ";
+                for (int pos = 0; pos < v_str.length; pos++) {
+                    texto += v_str[pos] + " ";
+                }
+
+            } else {
+
+                // Devolver texto descendente
+                texto += "Texto descendente: \n";
+
+                // Vector números
+                texto += "- Vector números: \n ";
+                for (int pos = v_nros.length - 1; pos >= 0; pos--) {
+                    texto += v_nros[pos] + " ";
+                }
+
+                // Vector strings
+                texto += "\n- Vector strings: \n ";
+                for (int pos = v_str.length - 1; pos >= 0; pos--) {
+                    texto += v_str[pos] + " ";
+                }
+            }
+            return texto;
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Ordenar " + e);
+        }
+    }
+
+    public static String Buscar(int valor) throws Exception {
+        try {
+            String texto = "";
+            boolean encontrado = false;
+    
+            texto += "Buscando el valor " + valor + " en el vector de números: \n";
+    
+            // Búsqueda en el vector de números (v_nros)
+            for (int pos = 0; pos < v_nros.length; pos++) {
+                if (v_nros[pos] == valor) {
+                    texto += "Encontrado en el vector de números en la posición: " + (pos + 1) + "\n";
+                    encontrado = true;
+                }
+            }
+    
+            texto += "Buscando el valor " + valor + " en el vector de strings: \n";
+    
+            // Búsqueda en el vector de strings (v_str)
+            String valorStr = Integer.toString(valor);
+            for (int pos = 0; pos < v_str.length; pos++) {
+                if (v_str[pos].equals(valorStr)) {
+                    texto += "Encontrado en el vector de strings en la posición: " + (pos + 1) + "\n";
+                    encontrado = true;
+                }
+            }
+    
+            if (!encontrado) {
+                texto += "No se encontró el valor en ninguno de los vectores.\n";
+            }
+    
+            return texto;
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en la búsqueda: " + e);
         }
     }
 
@@ -84,6 +415,7 @@ public class App {
 
     public static void Punto_2() throws Exception {
         try {
+            System.out.println("\n\nPunto 2:\n");
             System.out.println(Calcular_Temperatura(10));
         } catch (Exception e) {
             System.out.println("Ocurrió un error en el Punto_2: " + e);
@@ -143,6 +475,7 @@ public class App {
 
     public static void Punto_3() throws Exception {
         try {
+            System.out.println("\n\nPunto 3:\n");
             System.out.println(Ordenar_palabras());
         } catch (Exception e) {
             System.out.println("Ocurrió un error en el Punto_3: " + e);
@@ -223,6 +556,9 @@ public class App {
 
     public static void Punto_4() throws Exception {
         try {
+
+            System.out.println("\n\nPunto 4:\n");
+
             String opcion = "";
 
             System.out.println("Ingrese el número de elementos que quiere en el vector: ");
@@ -334,6 +670,7 @@ public class App {
 
     private static void Punto_5() throws Exception {
         try {
+            System.out.println("\n\nPunto 5:\n");
             System.out.println(Convertir_a_hexadecimal(7945));
 
         } catch (Exception e) {
@@ -346,22 +683,24 @@ public class App {
             // Definir variables
             int division = nro, contador = 0;
             String texto = "";
+            final byte divisor = 16;
 
             // Obtener tamaño arreglo
             do {
-                division = division / 16;
+                division = division / divisor;
                 contador++;
 
-            } while (division > 16);
+            } while (division > divisor);
 
             // Definir array
             int[] v_residuos = new int[contador + 1];
             division = nro;
 
+            // Llenar el vector con el residuo
             for (int pos = 0; pos <= contador; pos++) {
 
-                v_residuos[pos] = division % 16;
-                division = division / 16;
+                v_residuos[pos] = division % divisor;
+                division = division / divisor;
             }
 
             // Recorrer el archivo y cambiar a hexadecimal
@@ -392,6 +731,7 @@ public class App {
                         break;
                 }
             }
+            texto = "Número deciamal: " + nro + "\nNúmero hexadecimal: " + texto;
             return texto;
 
         } catch (Exception e) {
@@ -408,11 +748,19 @@ public class App {
 
         try {
 
+            System.out.println("\n\nPunto 6:\n");
+
+            // Preguntar al usuario
             Scanner teclado = new Scanner(System.in);
             System.out.println("Ingrese un valor para definir el orden de la matriz: ");
             tam_m = teclado.nextInt();
 
-            System.out.println(Crear_matriz_cudratica());
+            if (tam_m <= 0) {
+                System.out.println(
+                        "El número de elementos dentro de la matriz tiene que ser un valor entero mayor que 0");
+            } else {
+                System.out.println(Crear_matriz_cudratica());
+            }
 
         } catch (Exception e) {
             System.out.println("Ocurrió un error en el Punto_6: " + e);
@@ -443,12 +791,11 @@ public class App {
             resultado += "\nMatriz transpuesta: \n";
             for (int fil = 0; fil < tam_m; fil++) {
                 for (int col = 0; col < tam_m; col++) {
-                    m_transpuesta[col][fil] = m_cuadratica[col][fil];
-                    resultado += m_transpuesta[col][fil] + " ";
+                    m_transpuesta[fil][col] = m_cuadratica[col][fil];
+                    resultado += m_transpuesta[fil][col] + " ";
                 }
                 resultado += "\n";
             }
-
             return resultado;
         } catch (Exception e) {
             throw new Exception("Ocurrió un error en Crear_matriz_cudratica " + e);
@@ -463,6 +810,63 @@ public class App {
      * 100.
      */
 
+    public static void Punto_7() throws Exception {
+        try {
+            System.out.println("\n\nPunto 7:\n");
+            System.out.println(Calcular_producto_division());
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error en el Punto_7: " + e);
+        }
+    }
+
+    public static String Calcular_producto_division() throws Exception {
+        try {
+            // Definir variables y arrays
+            tam_m = (int) (Math.random() * (10 - 2 + 1) + 2);
+            matriz = new int[tam_m][tam_m];
+            String texto = "";
+            int nro_alea, suma_diagonal1 = 0, suma_diagonal2 = 0, producto;
+            double division;
+
+            // Lelnar matriz con aleatorios
+            for (int fil = 0; fil < tam_m; fil++) {
+                for (int col = 0; col < tam_m; col++) {
+                    nro_alea = (int) (Math.random() * (100 - 10 + 1) + 10);
+                    matriz[fil][col] = nro_alea;
+                    texto += matriz[fil][col] + " ";
+                }
+                texto += "\n";
+            }
+
+            // Suma diagonal primaria
+            for (int pos = 0; pos < tam_m; pos++) {
+                suma_diagonal1 += matriz[pos][pos];
+            }
+            texto += "\nSuma diagonal primaria: " + suma_diagonal1;
+
+            // Suma diagonal secundaria
+            int fil = matriz.length - 1;
+            for (int pos = 0; pos < tam_m; pos++) {
+                suma_diagonal2 += matriz[fil][pos];
+                fil--;
+            }
+            texto += "\nSuma diagonal secundaria: " + suma_diagonal2;
+
+            // Calcular producto
+            producto = suma_diagonal1 * suma_diagonal2;
+            texto += "\n\nProducto: " + producto;
+
+            // Calcular división
+            division = (double) suma_diagonal1 / suma_diagonal2;
+            texto += "\nDivisión: " + division;
+
+            return texto;
+
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Calcular_producto_division " + e);
+        }
+    }
+
     /*
      * 8. Escriba un algoritmo que llene de manera aleatoria una matriz de 100 filas
      * por 3 columnas con Xs y Os. Y mediante un vector cuente el número de Xs y Os
@@ -470,10 +874,169 @@ public class App {
      * vector con el resultado.
      */
 
+    public static void Punto_8() throws Exception {
+        try {
+            System.out.println("\n\nPunto 8:\n");
+            System.out.println(Llenar_matriz_y_contar());
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error en el Punto_8: " + e);
+        }
+    }
+
+    public static String Llenar_matriz_y_contar() throws Exception {
+        try {
+
+            // Definir variables y arrays
+            final int tam_fil = 100, tam_col = 3;
+            String[][] matriz_letras = new String[tam_fil][tam_col];
+            String texto = "";
+            int alea, contador_Xs = 0, contador_Os = 0;
+            String[] v_contador = new String[tam_fil];
+
+            // Matriz sin llenar
+            texto += "Matriz sin llenar: \n";
+            for (int fil = 0; fil < tam_fil; fil++) {
+                for (int col = 0; col < tam_col; col++) {
+                    texto += matriz_letras[fil][col] + " ";
+                }
+                texto += "\n";
+            }
+
+            // Llenar matriz
+            texto += "\nMatriz llena: \n";
+            for (int fil = 0; fil < tam_fil; fil++) {
+
+                // Reiniciar el conteo en cada fila
+                contador_Xs = 0;
+                contador_Os = 0;
+
+                for (int col = 0; col < tam_col; col++) {
+                    alea = (int) (Math.random() * (2 - 1 + 1) + 1);
+                    switch (alea) {
+                        case 1:
+                            matriz_letras[fil][col] = "Xs";
+                            contador_Xs++; // Agregar el contador de Xs
+                            break;
+                        case 2:
+                            matriz_letras[fil][col] = "Os";
+                            contador_Os++; // Agregar el contador de Os
+                            break;
+                    }
+                }
+                v_contador[fil] = "\nFila " + (fil + 1) + ":\n - Xs: " + contador_Xs + "\n - Os: " + contador_Os;
+            }
+
+            // Mostrar matriz llena
+            for (int fil = 0; fil < matriz_letras.length; fil++) {
+                texto += (Arrays.toString(matriz_letras[fil]));
+                texto += "\n";
+            }
+
+            // Imprimir conteo
+            texto += "\nConteo por filas:\n";
+            for (int fil = 0; fil < tam_fil; fil++) {
+                texto += v_contador[fil] + "\n";
+            }
+
+            return texto;
+
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Llenar_matriz_y_contar " + e);
+        }
+    }
+
     /*
      * 9. Llene una matriz de 5x5 con números aleatorios entre 1 y 9. En un vector
      * adicional, calcule la cantidad de números repetidos por cada fila y en otro
      * vector la cantidad de números repetidos de cada columna.
      */
 
+    public static void Punto_9() throws Exception {
+        try {
+            System.out.println("\n\nPunto 9:\n");
+            System.out.println(Calcular_repeticiones());
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error en el Punto_9: " + e);
+        }
+    }
+
+    public static String Calcular_repeticiones() throws Exception {
+        try {
+
+            // Definir variables y array
+            tam_m = 5;
+            int alea, max = 9, min = 1;
+            String texto = "";
+            int[][] m_nros_alea = new int[tam_m][tam_m];
+            int[] v_col = new int[tam_m];
+
+            // Llenar matriz con aleatorios
+            for (int fil = 0; fil < tam_m; fil++) {
+
+                for (int col = 0; col < tam_m; col++) {
+                    alea = (int) (Math.random() * (max - min + 1) + min);
+                    m_nros_alea[fil][col] = alea;
+                    texto += m_nros_alea[fil][col] + " ";
+                }
+                texto += "\n";
+            }
+
+            // Contar repetidos por fila
+            texto += "\nContar filas: \n";
+
+            for (int fil = 0; fil < tam_m; fil++) {
+                texto += "Fila " + (fil + 1) + ": " + Contar_repetidos_vector(m_nros_alea[fil]) + "\n";
+            }
+
+            // Contar repetidos por columna
+            texto += "\nContar columnas: \n";
+
+            for (int col = 0; col < tam_m; col++) {
+                for (int fil = 0; fil < tam_m; fil++) {
+                    v_col[fil] = m_nros_alea[fil][col];
+                }
+                texto += "Columna " + (col + 1) + ": " + Contar_repetidos_vector(v_col) + "\n";
+            }
+            return texto;
+
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Calcular_repeticiones " + e);
+        }
+    }
+
+    public static int Contar_repetidos_vector(int[] fila) throws Exception {
+        try {
+
+            int[] contador = new int[fila.length];
+            int suma = 0;
+
+            for (int pos_co = 0; pos_co < fila.length; pos_co++) {
+                contador[pos_co] = 0;
+
+                if (fila[pos_co] != 0) {
+
+                    for (int pos = pos_co + 1; pos < fila.length; pos++) {
+
+                        if (fila[pos] != 0) {
+
+                            if (fila[pos] == fila[pos_co]) {
+                                fila[pos] = 0;
+                                contador[pos_co] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (int sum_pos = 0; sum_pos < contador.length; sum_pos++) {
+                suma += contador[sum_pos];
+            }
+
+            return suma;
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error en Contar_repetidos_fila " + e);
+        }
+    }
 }
